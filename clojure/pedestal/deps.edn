@@ -1,7 +1,7 @@
 {:paths ["src"]
- :deps  {org.graphqlize/graphqlize        {:mvn/version "0.1.0-alpha1"}
+ :deps  {org.graphqlize/graphqlize        {:mvn/version "0.1.0-alpha2"}
          org.graphqlize/honeyeql          {:mvn/version "0.1.0-alpha2"}
-         org.graphqlize/honeyeql-postgres {:mvn/version "0.1.0-alpha1"}
+         org.graphqlize/honeyeql-postgres {:mvn/version "0.1.0-alpha2"}
          hikari-cp                        {:mvn/version "2.10.0"}
          org.postgresql/postgresql        {:mvn/version "42.2.8"}
          org.slf4j/slf4j-simple           {:mvn/version "1.7.30"}
