@@ -1,6 +1,6 @@
 (ns server
   (:require [hikari-cp.core :as hikari]
-            [honeyeql-postgres.core :as heql-pg]
+            [honeyeql.db :as heql-db]
             [io.pedestal.http :as server]
             [com.walmartlabs.lacinia.pedestal :as lacinia-pedestal]
             [graphqlize.lacinia.core :as l]))
@@ -13,7 +13,7 @@
                                       :username          "postgres"
                                       :password          "postgres"}))
 
-(def heql-db-adapter (heql-pg/initialize db-spec))
+(def heql-db-adapter (heql-db/initialize db-spec))
 
 (def lacinia-schema (l/schema heql-db-adapter))
 
