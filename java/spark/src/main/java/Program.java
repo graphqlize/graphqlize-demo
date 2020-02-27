@@ -3,7 +3,6 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.graphqlize.java.GraphQLResolver;
 import org.graphqlize.java.GraphQLizeResolver;
-import spark.ResponseTransformer;
 
 import javax.sql.DataSource;
 
@@ -21,24 +20,13 @@ class GraphQlRequest {
   }
 }
 
-class JsonTransformer implements ResponseTransformer {
-
-  private Gson gson = new Gson();
-
-  @Override
-  public String render(Object model) {
-    return gson.toJson(model);
-  }
-
-}
-
 public class Program {
 
   private static DataSource getDataSource() {
     HikariConfig config = new HikariConfig();
-//    config.setJdbcUrl("jdbc:postgresql://localhost:5432/sakila");
-//    config.setUsername("postgres");
-//    config.setPassword("postgres");
+    // config.setJdbcUrl("jdbc:postgresql://localhost:5432/sakila");
+    // config.setUsername("postgres");
+    // config.setPassword("postgres");
     config.setJdbcUrl("jdbc:mysql://localhost:3306/sakila");
     config.setUsername("root");
     config.setPassword("mysql123");
@@ -47,14 +35,19 @@ public class Program {
 
   public static void main(String[] args) {
     DataSource dataSource = getDataSource();
+    System.out.println("Initializing GraphQLize...");
     GraphQLResolver graphQLResolver = new GraphQLizeResolver(dataSource);
-
-    Gson gson = new Gson();
+    System.out.println("GraphQLize Initialized");
 
     staticFiles.location("/public");
+
     post("/graphql", (req, res) -> {
+      Gson gson = new Gson();
       GraphQlRequest graphQlRequest = gson.fromJson(req.body(), GraphQlRequest.class);
-      return gson.fromJson(graphQLResolver.resolve(graphQlRequest.getQuery()), Object.class);
-    }, new JsonTransformer());
+      String query = graphQlRequest.getQuery();
+      String result = graphQLResolver.resolve(query);
+      res.header("Content-Type", "application/json");
+      return result;
+    });
   }
 }
