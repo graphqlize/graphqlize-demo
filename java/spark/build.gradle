@@ -1,11 +1,16 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group 'org.graphqlize'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
+
+application {
+    mainClassName = 'Program'
+}
 
 repositories {
     mavenCentral()
