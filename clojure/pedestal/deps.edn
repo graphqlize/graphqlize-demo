@@ -1,5 +1,5 @@
 {:paths ["src"]
- :deps  {org.graphqlize/graphqlize        {:mvn/version "0.1.0-alpha-3"}
+ :deps  {org.graphqlize/graphqlize        {:mvn/version "0.1.0-alpha-4"}
          hikari-cp                        {:mvn/version "2.10.0"}
          org.postgresql/postgresql        {:mvn/version "42.2.8"}
          org.slf4j/slf4j-simple           {:mvn/version "1.7.30"}
