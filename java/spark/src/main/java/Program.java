@@ -1,15 +1,15 @@
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.graphqlize.java.GraphQLResolver;
 import org.graphqlize.java.GraphQLizeResolver;
 
-import spark.embeddedserver.jetty.HttpRequestWrapper;
-
-import static spark.Spark.*;
-
 import javax.sql.DataSource;
 import java.util.Map;
+
+import static spark.Spark.post;
+import static spark.Spark.staticFiles;
 
 class GraphQLRequest {
   private String query;
@@ -54,8 +54,9 @@ public class Program {
     staticFiles.location("/public");
 
     post("/graphql", (req, res) -> {
-      Gson gson = new Gson();
-      GraphQLRequest graphQlRequest = gson.fromJson(req.body(), GraphQLRequest.class);
+      ObjectMapper objectMapper = new ObjectMapper();
+      objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+      GraphQLRequest graphQlRequest = objectMapper.readValue(req.body(), GraphQLRequest.class);
 
       String query = graphQlRequest.getQuery();
       Map<String, Object> variables = graphQlRequest.getVariables();
