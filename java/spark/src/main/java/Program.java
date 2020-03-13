@@ -4,15 +4,27 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.graphqlize.java.GraphQLResolver;
 import org.graphqlize.java.GraphQLizeResolver;
 
-import javax.sql.DataSource;
+import spark.embeddedserver.jetty.HttpRequestWrapper;
 
 import static spark.Spark.*;
 
-class GraphQlRequest {
+import javax.sql.DataSource;
+import java.util.Map;
+
+class GraphQLRequest {
   private String query;
+  private Map<String, Object> variables;
 
   public String getQuery() {
     return query;
+  }
+
+  public Map<String, Object> getVariables() {
+    return variables;
+  }
+
+  public void setVariables(Map<String, Object> variables) {
+    this.variables = variables;
   }
 
   public void setQuery(String query) {
@@ -43,9 +55,12 @@ public class Program {
 
     post("/graphql", (req, res) -> {
       Gson gson = new Gson();
-      GraphQlRequest graphQlRequest = gson.fromJson(req.body(), GraphQlRequest.class);
+      GraphQLRequest graphQlRequest = gson.fromJson(req.body(), GraphQLRequest.class);
+
       String query = graphQlRequest.getQuery();
-      String result = graphQLResolver.resolve(query);
+      Map<String, Object> variables = graphQlRequest.getVariables();
+      String result = graphQLResolver.resolve(query, variables);
+
       res.header("Content-Type", "application/json");
       return result;
     });
