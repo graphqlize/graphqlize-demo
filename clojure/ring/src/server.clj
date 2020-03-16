@@ -1,28 +1,15 @@
 (ns server
   (:require [ring.adapter.jetty :as jetty]
+            [ring.util.request :as request]
             [ring.middleware.resource :as resource]
             [ring.middleware.content-type :as content-type]
             [ring.middleware.not-modified :as not-modified]
-   
             [reitit.ring :as ring]
-            [reitit.ring.coercion :as rrc]
-            [reitit.ring.middleware.muuntaja :as muuntaja]
-            [muuntaja.core :as m]
-            [reitit.coercion.spec :as reitit-spec]
 
             [com.walmartlabs.lacinia :as lacinia]
+            [clojure.data.json :as json]
             [hikari-cp.core :as hikari]
-            [graphqlize.lacinia.core :as l]
-            [clojure.spec.alpha :as s]))
-
-
-(s/def ::query string?)
-(s/def ::variables map?)
-(s/def ::graphql-request (s/keys :req-un [::query]
-                                 :opt-un [::variables]))
-
-(s/def ::data map?)
-(s/def ::graphql-response (s/keys :out-un [::data]))
+            [graphqlize.lacinia.core :as l]))
 
 (def db-spec (hikari/make-datasource {:adapter           "postgresql"
                                       :database-name     "sakila"
@@ -35,24 +22,14 @@
 (def lacinia-schema (l/schema db-spec))
 
 (defn handler [request]
-  (let [{:keys [query variables]}
-        (get-in request [:parameters :body])]
+  (let [{:keys [query variables]} (json/read-str (request/body-string request) :key-fn keyword)
+        result                    (lacinia/execute lacinia-schema query variables nil)]
     {:status  200
-     :body    (lacinia/execute lacinia-schema query variables nil)}))
-
-(def router
-  (ring/router
-   ["/graphql" {:post     {:handler    handler 
-                           :coercion   reitit-spec/coercion
-                           :responses {200 {:body ::graphql-response}}
-                           :parameters  {:body ::graphql-request}}}]
-   {:data {:muuntaja m/instance
-           :middleware [muuntaja/format-middleware
-                        rrc/coerce-request-middleware
-                        rrc/coerce-response-middleware]}}))
+     :body    (json/write-str result)
+     :headers {"Content-Type" "application/json"}}))
 
 (def app
-  (-> (ring/ring-handler router)
+  (-> (ring/ring-handler (ring/router ["/graphql" {:post handler}]))
       (resource/wrap-resource "static")
       content-type/wrap-content-type
       not-modified/wrap-not-modified))
@@ -61,9 +38,9 @@
   (jetty/run-jetty app {:join? false
                         :port  8080}))
 
-(.addShutdownHook (Runtime/getRuntime) 
+(.addShutdownHook (Runtime/getRuntime)
                   (Thread. (fn []
-                              (.close db-spec))))
+                             (.close db-spec))))
 
 (defn -main []
   (start-server))
