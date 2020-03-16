@@ -1,5 +1,9 @@
 (ns server
   (:require [ring.adapter.jetty :as jetty]
+            [ring.middleware.resource :as resource]
+            [ring.middleware.content-type :as content-type]
+            [ring.middleware.not-modified :as not-modified]
+   
             [reitit.ring :as ring]
             [reitit.ring.coercion :as rrc]
             [reitit.ring.middleware.muuntaja :as muuntaja]
@@ -47,10 +51,15 @@
                         rrc/coerce-request-middleware
                         rrc/coerce-response-middleware]}}))
 
+(def app
+  (-> (ring/ring-handler router)
+      (resource/wrap-resource "static")
+      content-type/wrap-content-type
+      not-modified/wrap-not-modified))
+
 (defn start-server []
-  (jetty/run-jetty (ring/ring-handler router) 
-                   {:join? false
-                    :port  8080}))
+  (jetty/run-jetty app {:join? false
+                        :port  8080}))
 
 (.addShutdownHook (Runtime/getRuntime) 
                   (Thread. (fn []
