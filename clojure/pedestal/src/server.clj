@@ -2,7 +2,8 @@
   (:require [hikari-cp.core :as hikari]
             [io.pedestal.http :as server]
             [com.walmartlabs.lacinia.pedestal :as lacinia-pedestal]
-            [graphqlize.lacinia.core :as l]))
+            [graphqlize.lacinia.core :as l]
+            [io.pedestal.http :as http]))
 
 (def db-spec (hikari/make-datasource {:adapter           "postgresql"
                                       :database-name     "sakila"
@@ -14,8 +15,10 @@
 
 (def lacinia-schema (l/schema db-spec))
 
-(def service (lacinia-pedestal/service-map lacinia-schema {:graphiql true
-                                                           :port     8080}))
+(def service (assoc
+              (lacinia-pedestal/service-map lacinia-schema {:graphiql true
+                                                            :port     8080})
+              ::http/resource-path "/static"))
 
 (defonce runnable-service (server/create-server service))
 
