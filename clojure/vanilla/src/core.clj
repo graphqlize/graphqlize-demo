@@ -28,9 +28,13 @@
    (lacinia/execute lacinia-schema query variables nil)))
 
 (comment
+  ;; sample queries
   (execute "query { actorByActorId(actorId: 1) { firstName, lastName } }")
   (execute "query($actorId: Int!) { actorByActorId(actorId: $actorId) { firstName, lastName } }"
-           {:actorId 1}))
+           {:actorId 1})
+  ;; introspection queries
+  (execute "{__schema {types {name}}}")
+  (execute "{__type(name: \"Actor\") { fields { name type { name kind ofType { name kind }}}}}"))
 
 (defn -main []
   (prn "Hello, World!"))
