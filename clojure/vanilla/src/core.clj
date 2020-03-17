@@ -1,6 +1,5 @@
 (ns core
   (:require [com.walmartlabs.lacinia :as lacinia]
-            [clojure.data.json :as json]
             [hikari-cp.core :as hikari]
             [graphqlize.lacinia.core :as l]))
 
