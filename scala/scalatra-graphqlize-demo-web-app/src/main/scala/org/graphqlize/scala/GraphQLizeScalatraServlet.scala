@@ -18,23 +18,16 @@ class GraphQLizeScalatraServlet(graphQLResolver : GraphQLResolver) extends Scala
   }
 
   post("/graphql") {
-    println(request.body)
-    val gqlReq = parse(request.body, useBigIntForLong = false).extract[GraphQLRequest]
-    gqlReq.variables.get.foreach {
-      case (name, value) => println(s"$name = $value (${value.getClass})")
-    }
+    val gqlReq = JsonMethodsExt.parse(compact(render(parsedBody))).extract[GraphQLRequest]
     if (gqlReq.variables.isDefined)
       graphQLResolver.resolve(gqlReq.query, gqlReq.variables.get.asJava)
     else
       graphQLResolver.resolve(gqlReq.query)
   }
-
-
-
 }
 
 object JsonMethodsExt extends org.json4s.jackson.JsonMethods {
-  // we need this because otherwise parse(useBigIntForLong = false) doesn't work.
-  // It should be patched in future json4s versions
   mapper.disable(DeserializationFeature.USE_BIG_INTEGER_FOR_INTS)
+  def parse(in: JsonInput): JValue = super.parse(in, useBigIntForLong = false)
+  def parseOpt(in: JsonInput): Option[JValue] = super.parseOpt(in, useBigIntForLong = false)
 }
