@@ -36,12 +36,12 @@ public class Program {
 
   private static DataSource getDataSource() {
     HikariConfig config = new HikariConfig();
-    // config.setJdbcUrl("jdbc:postgresql://localhost:5432/sakila");
-    // config.setUsername("postgres");
-    // config.setPassword("postgres");
-    config.setJdbcUrl("jdbc:mysql://localhost:3306/sakila");
-    config.setUsername("root");
-    config.setPassword("mysql123");
+    config.setJdbcUrl("jdbc:postgresql://localhost:5432/sakila");
+    config.setUsername("postgres");
+    config.setPassword("postgres");
+    //config.setJdbcUrl("jdbc:mysql://localhost:3306/sakila");
+    //config.setUsername("root");
+    //config.setPassword("mysql123");
     return new HikariDataSource(config);
   }
 
