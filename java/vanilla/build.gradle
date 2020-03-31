@@ -18,6 +18,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
     implementation 'org.postgresql:postgresql:42.2.10'
     implementation 'mysql:mysql-connector-java:8.0.19'
     implementation 'org.graphqlize:graphqlize-java:0.1.0-alpha5'
