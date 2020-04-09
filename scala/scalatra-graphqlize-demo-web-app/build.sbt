@@ -23,7 +23,7 @@ libraryDependencies ++= Seq(
   "org.postgresql" % "postgresql" % "42.2.10",
   "mysql" % "mysql-connector-java" % "8.0.19",
   "com.zaxxer" % "HikariCP" % "3.4.2",
-  "org.graphqlize" % "graphqlize-java" % "0.1.0-alpha6"
+  "org.graphqlize" % "graphqlize-java" % "0.1.0-alpha7"
 )
 
 enablePlugins(SbtTwirl)
