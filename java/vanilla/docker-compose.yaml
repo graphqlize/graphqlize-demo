@@ -1,0 +1,32 @@
+version: '3'
+
+networks:
+  graphqlize:
+
+volumes:
+  db-data:
+
+services:
+  graphqlize:
+    build: .
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; /app/bin/vanilla'
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 5
+        window: 120s
+    volumes:
+      - ./config/docker-database.properties:/app/config/database.properties
+    depends_on:
+      - sakiladb
+    ports:
+      - "8080:80"
+    networks:
+      - graphqlize
+  sakiladb:
+    image: sakiladb/postgres:12
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - graphqlize
