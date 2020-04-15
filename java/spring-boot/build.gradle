@@ -1,13 +1,18 @@
 plugins {
-	id 'org.springframework.boot' version '2.2.5.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id "com.github.ben-manes.versions" version "0.28.0"
 	id 'java'
+	id 'application'
 }
 
 group = 'org.graphqlize.java'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
+
+applicationName = 'graphqlize-boot'
+
+application {
+	mainClassName = 'org.graphqlize.java.springboot.Application'
+}
 
 repositories {
 	mavenCentral()
@@ -15,7 +20,9 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation platform("org.springframework.boot:spring-boot-dependencies:2.2.6.RELEASE")
+
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.postgresql:postgresql:42.2.10'
     implementation 'mysql:mysql-connector-java:8.0.19'
