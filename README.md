@@ -27,3 +27,4 @@ The actual implementation of these steps will vary based on which language (Java
   - [Ring](https://www.graphqlize.org/docs/getting_started/clojure/ring)
   - [Vanilla Clojure](https://www.graphqlize.org/docs/getting_started/clojure/vanilla)
 
+![graphqlize-docker-demo](graphqlize-boot-docker.gif)
