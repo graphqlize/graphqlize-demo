@@ -9,7 +9,7 @@ volumes:
 services:
   graphqlize:
     build: .
-    command: bash -c 'while !</dev/tcp/sakiladb/5432; do sleep 1; done; /app/bin/graphqlize-boot '
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; /app/bin/graphqlize-boot '
     deploy:
       restart_policy:
         condition: on_failure
@@ -17,16 +17,23 @@ services:
         max_attempts: 5
         window: 120s
     volumes:
+      # The configuration graphqlize will use for connecting to the database
       - ./config/docker-application.properties:/app/config/application.properties
     depends_on:
-      - sakiladb
+      - db
     ports:
       - "8080:8080"
     networks:
       - graphqlize
-  sakiladb:
-    image: sakiladb/postgres:12
+  db:
+    # image: sakiladb/postgres:11
+    # Use this image if you want to load your own data instead of sakila sample db
+    image: postgres-ro
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
       - db-data:/var/lib/postgresql/data
+      # Place your SQL data here to be loaded during first initialization
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     networks:
       - graphqlize

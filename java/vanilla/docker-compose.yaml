@@ -17,15 +17,18 @@ services:
         max_attempts: 5
         window: 120s
     volumes:
+      # The configuration graphqlize will use for connecting to the database
       - ./config/docker-database.properties:/app/config/database.properties
     depends_on:
-      - sakiladb
+      - db
     ports:
       - "8080:80"
     networks:
       - graphqlize
-  sakiladb:
+  db:
     image: sakiladb/postgres:12
+    # Use this image if you want to load your own data instead of sakila sample db
+    # image: postgres:12
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
