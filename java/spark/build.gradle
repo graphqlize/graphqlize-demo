@@ -21,7 +21,7 @@ dependencies {
     implementation 'com.sparkjava:spark-core:2.9.1'
     implementation 'org.postgresql:postgresql:42.2.10'
     implementation 'mysql:mysql-connector-java:8.0.19'
-    implementation 'org.graphqlize:graphqlize-java:0.1.0-alpha16'
+    implementation 'org.graphqlize:graphqlize-java:0.1.0-alpha17'
     implementation 'com.zaxxer:HikariCP:3.4.2'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.10.3'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.3'
