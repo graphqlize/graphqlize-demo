@@ -26,7 +26,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.postgresql:postgresql:42.2.10'
     implementation 'mysql:mysql-connector-java:8.0.19'
-    implementation 'org.graphqlize:graphqlize-java:0.1.0-alpha17'
+    implementation 'org.graphqlize:graphqlize-java:0.1.0-alpha18'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
