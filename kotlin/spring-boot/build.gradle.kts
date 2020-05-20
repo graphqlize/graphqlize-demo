@@ -23,7 +23,7 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	implementation("org.graphqlize:graphqlize-java:0.1.0-alpha18")
+	implementation("org.graphqlize:graphqlize-java:0.1.0-alpha19")
 	implementation("org.postgresql:postgresql:42.2.10")
 	implementation("mysql:mysql-connector-java:8.0.19")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
